@@ -1,0 +1,4 @@
+Este documento contém os requisitos funcionais do aplicativo.
+
+RF1: Definir rotas seguras baseado em critérios 
+RF2: Listar pontos de acolhimento 
