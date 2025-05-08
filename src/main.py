@@ -22,7 +22,7 @@ G = ox.graph_from_bbox(bbox, network_type='drive')
 
 custom_weights = {
     (357130378, 357130374): 50,  
-    (357130378, 357213103): 30,
+    (357130378, 357213103): 3000000,
     (357213103, 357213101): 120,
     (357130374, 357213101): 1300,
     (357213101, 357213098): 140,
@@ -37,10 +37,10 @@ for u, v, data in G.edges(data=True):
     if (u, v) in custom_weights:
         data['weight'] = custom_weights[(u, v)]
 
-begining = list(G.nodes())[0]  
+beginning = list(G.nodes())[0]  
 ending = list(G.nodes())[-1] 
 
-caminho = nx.shortest_path(G, source=begining, target=ending, weight='weight')
+caminho = nx.shortest_path(G, source=beginning, target=ending, weight='weight')
 
 fig, ax = ox.plot_graph(G, show=False, close=False, node_color="red", node_size=50, edge_linewidth=1, bgcolor="white")
 
