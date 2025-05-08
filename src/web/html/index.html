@@ -6,12 +6,30 @@
     <title>LocaHelp</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.css" type="text/css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ol3/4.6.5/ol.js"></script>
-    <script src="../js/index.js"></script>
-    <link  rel="stylesheet" href="../css/index.css">
+    <script src="../js/map.js"></script>
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link rel="icon" type="image/x-icon" href="../data/favicon.png">
 </head>
 
 <body>
+    <header class="app-header">
+        <img src="../data/logo.png">
+        <div class="menu">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+        </div>
+    </header>
     <div id="map"></div>
+    <footer>
+        <div class="app-footer">
+            <nav>
+            </nav>
+            <button id="alert-button">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            </button>
+        </div>
+    </footer>
+    <script src="../js/functionalities.js"></script>
 </body>
 
 </html>
