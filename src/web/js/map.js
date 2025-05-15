@@ -4,7 +4,10 @@ function drawPath(pathData) {
         return;
     }
 
-    var routeCoords = pathData.map(point => [point.lon, point.lat]);
+    targetNode = pathData.target
+    path = pathData.path
+
+    var routeCoords = path.map(point => [point.lon, point.lat]);
     var transformedRouteCoords = routeCoords.map(coord => ol.proj.fromLonLat(coord));
 
     var routeFeature = new ol.Feature({
@@ -49,10 +52,15 @@ function drawPath(pathData) {
 
     endMarker.setStyle(new ol.style.Style({
         image: new ol.style.Icon({
-            radius: 7,
-            scale: 0.4,
-            src: '../data/pinpoint.png'
-        })
+            scale: .4,
+            src: `${targetNode.foto}`,
+        }),
+        text: new ol.style.Text({
+        text: targetNode.local || "Destino",
+        offsetY: -100,
+        font: 'bold 35px sans-serif',
+        textAlign: 'center'
+    })
     }));
 
     vectorSource.addFeatures([routeFeature, startMarker, endMarker]);
@@ -72,6 +80,7 @@ function drawPath(pathData) {
     vectorSource.addFeature(locationFeature);
 
     // Geolocation tracking
+    /*
     if (navigator.geolocation) {
         navigator.geolocation.watchPosition(
             function (position) {
@@ -89,4 +98,5 @@ function drawPath(pathData) {
     } else {
         console.error("Geolocation is not supported.");
     }
+    */
 }

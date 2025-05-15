@@ -6,6 +6,7 @@
 
 body {
     position: 'relative';
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #map {
@@ -26,7 +27,7 @@ body {
     align-items: center;
 }
 
-.app-header > img {
+.app-header>img {
     height: 160px;
     width: auto;
 }
@@ -37,7 +38,7 @@ body {
     align-items: center;
 }
 
-.menu > i {
+.menu>i {
     color: rgba(51, 51, 51, 0.85);
     font-size: 80px;
 }
@@ -47,9 +48,11 @@ footer {
     z-index: 999;
     width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     bottom: 6rem;
+    row-gap: 4rem;
 }
 
 .app-footer {
@@ -64,7 +67,7 @@ footer {
     border-radius: 20rem;
 }
 
-.app-footer > button {
+.app-footer>button {
     border: none;
     padding: 2.31225rem;
     background-color: rgb(172, 26, 26);
@@ -73,9 +76,112 @@ footer {
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 15px rgb(0, 0, 0, 0.5);
+    position: absolute;
 }
 
-.app-footer > button > i {
+.app-footer>button>i {
     font-size: 100px;
     color: white;
+}
+
+.utils {
+    display: flex;
+    width: 70%;
+    justify-content: right;
+
+}
+
+.utils>i {
+    font-size: 60px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+nav {
+    width: 100%;
+    display: flex;
+    justify-content: right;
+    padding: 0 1.625rem;
+}
+
+.notifications {
+    display: flex;
+    position: absolute;
+    z-index: 999;
+    top: 280px;
+    width: 100%;
+    justify-content: center;
+}
+
+.not-module {
+    background-color: white;
+    width: 85%;
+    padding: 3rem 4.625rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    border-radius: 200px;
+    box-shadow: 0px 1px 10px rgb(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: popIn .5s ease-in-out;
+}
+
+.not-title {
+    font-size: 35px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.not-body {
+    font-size: 30px;
+    font-weight: 400;
+}
+
+#not-icon {
+    position: absolute;
+    font-size: 180px;
+    right: 60px;
+    bottom: 60px;
+    color: rgba(0,0,0,0.1)
+}
+
+.not-close {
+    background-color: rgba(0,0,0,0);
+    border: none;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    font-size: 30px;
+    padding: .625rem;
+    color: rgba(54, 54, 54, 0.685)
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        margin-top: 100px;
+    }
+    50% {
+        margin-top: 0px;
+    }
+    70% {
+        transform: rotateX(-25deg);
+    }
+    100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+    }
+}
+
+.remove-not {
+    animation: fadeOut .5s ease-in-out forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
