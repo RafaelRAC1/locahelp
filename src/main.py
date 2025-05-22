@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import datetime  
 import random  
+import os
+os.makedirs("algorithms", exist_ok=True)
 
 
 def add_node(lat, lon, G): 
@@ -26,9 +28,9 @@ def add_node(lat, lon, G):
         G.nodes[nearest_node]['y'], G.nodes[nearest_node]['x']
     )
 
-    # Add edge in both directions
-    G.add_edge(new_node_id, nearest_node, length=distance)
-    G.add_edge(nearest_node, new_node_id, length=distance)
+    # Add edge in both directions with the same weight
+    G.add_edge(new_node_id, nearest_node, length=distance, weight=distance)
+    G.add_edge(nearest_node, new_node_id, length=distance, weight=distance)
     
     return G, new_node_id
 
@@ -62,16 +64,9 @@ def shortest_path(coords):
     # Add safe point
     safeNodes = [
         {
-            "lat":-23.51500,
-            "lon":-46.18585,
-            "local":"Tiro de Guerra",
-            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
-            "nodeId":""
-        },
-        {
             "lat":-23.51439,
             "lon":-46.18395,
-            "local":"pontoOnibus",
+            "local":"Ponto de Onibus",
             "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
             "nodeId":""
         }
@@ -140,101 +135,55 @@ def shortest_path(coords):
         (356351208, 356351296), (356351296, 356351120)
     ]
 
-    # Original custom weights (commented out)
-    """
-    custom_weights = {
-        (357130378, 357130374): 50,  
-        (357130378, 357213103): 10,
-        (357213103, 357213101): 120,
-        (357130374, 357213101): 500000000000,
-        (357213101, 357213098): 140,
-        (357213098, 357213104): 150,
-        (357213098, 357213110): 100,
-        (357213104, 357213109): 110,
-        (357213109, 357213110): 120,
-        (357213110, 357213097): 140
-    }
-    """
-
     # Generate time-based weights for all connections
     custom_weights = {}
     
     # All connections from the original dictionary
     all_connections = [
-        # Previous connections
-        (356305920, 356305925), (356315514, 356315512), (356315512, 356315457),
-        (356315457, 356315369), (356315369, 356315526), (356315369, 356306091),
-        (356306091, 356496367),
-        
-        # Connections from Img 1
-        (356306090, 356306091), (356306091, 6264967367), (6264967367, 356306116),
-        (356306090, 356306147), (356306116, 356306147),
-        
-        # Connections from Img 2
-        (6264967367, 356306111), (356306111, 2435125370), (2435125370, 356306110),
-        
-        # Connections from Img 3 and 4
-        (356306102, 5661432523), (5661432523, 356306103), (5661432523, 356306110),
-        (356306110, 356306109), (356306103, 356306109), (356306103, 356306104),
-        (356306109, 356306108), (356306108, 356306104), (356306108, 5661432417),
-        (356306104, 356306105),
-        
-        # Previous connections from latest images
-        (356306108, 5755074585), (5661432417, 356351102), (356306105, 356351274),
-        (356351274, 356351269), (5755074585, 5755074582), (5755074585, 5755074566),
-        (5755074582, 5755074570), (5755074566, 5755074570), (5755074566, 5755074565),
-        (5755074565, 5755074562), (5755074570, 5755074562), (5661432417, 5755074582),
-        
-        # New connections from upper part of the map
-        (5755074565, 5755074574), (5755074562, 5755074571), (5755074574, 5755074571),
-        (5755074574, 5755074578), (5755074578, 5755074575),
-        
-        # Circle connections
-        (5755074578, 1819607178), (5755074575, 356306155), (1819607178, 356306155),
-        (1819607178, 12487994438), (12487994438, 3306164155), (3306164155, 3306164150),
-        (12487994438, 1819607172), (1819607172, 1819607174), (1819607172, 356306150),
-        (356306150, 1725598401), (356306150, 1819607174), (356306155, 356306154),
-        (356306154, 1725598401), (1725598401, 1819607155), (356306154, 1819607155),
-        
-        # Left side connections
-        (3306164150, 3306164142), (3306164142, 7930322009), (1819607174, 3306164116),
-        
-        # Far left connections
-        (3306164116, 3306164113), (3306164113, 3306164115), (3306164115, 3306164118),
-        (3306164155, 4884161555), (3306164150, 3306164132), (3306164142, 3306164145),
-        (7930322010, 3306164127),
-        
-        # Circle connections on the left
-        (3306164118, 3306164115), (3306164115, 3306164127), (3306164127, 3306164145),
-        (3306164145, 3306164132), (3306164132, 4884161555),
-        
-        # Connection back to the beginning
-        (3306164113, 356306147),
-        
-        # Right bottom connections
-        (356351102, 356351098), (356351102, 356351212), (356351098, 356351212),
-        (356351212, 356351208),
-        
-        # Upper right connections
-        (356351208, 356351296), (356351296, 356351120), (356351120, 356351127),
-        (356351127, 4172100710), (4172100710, 4172100714), (356351127, 4172100714),
-        (356351296, 356351195), (356351195, 356351193), (356351195, 356351283),
-        (356351193, 356351283),
-        
-        # Connections to upper part of the map
-        (356351193, 356351162), (4172100714, 2858472026),
-        
-        # Connection to previous circle
-        (356351283, 1819607155)
+        (4561764463, 4561764462), (4561764462, 7927338847), (7927338847, 3560305834), 
+        (3560305834, 1791040184), (3560305834, 356306125), (356306125, 356306123), 
+        (356306125, 356306139), (356306125, 356306142), (7927338847, 7927338846), 
+        (7927338846, 3560305832), (3560305832, 356305951), (356305951, 3560305834), 
+        (356306125, 6267878887), (356305951, 356305823), (6267878887, 1791040083), 
+        (1791040083, 6267874483), (6267874483, 1791040075), (6267874483, 1791040189), 
+        (1791040189, 1723059613), (1723059613, 4138915091), (1791040083, 17191040081), 
+        (17191040081, 1791040187), (4138915091, 1791040107), (1791040187, 1791040176), 
+        (1791040176, 7930579113), (7930579113, 7930579105), (7930579102, 7930579105), 
+        (7930579101, 7930579102), (7930579102, 7930579103), (7930579104, 7930579103), 
+        (5844247291, 7930579104), (1791040083, 5844247291), (5844247291, 6267878887), 
+        (6267878887, 7931362707), (7931362707, 356306125), (5654900058, 11500782433), 
+        (11500782433, 356351156), (356351156, 356614952), (356614952, 356351144), 
+        (356351144, 356351141), (356351141, 2858472026), (356351156, 7927560290), 
+        (7927560290, 7927560291), (7927560290, 1723059626), (1723059626, 5644743047), 
+        (1723059626, 5644743051), (5644743047, 1905915655), (1905915655, 356351170), 
+        (5644743051, 356351170), (356351170, 1791040175), (1905915655, 1791040238), 
+        (1791040238, 11751676761), (11751676761, 3306166841), (3306166841, 5644743034), 
+        (5644743034, 3306166844), (3306166841, 5644743035), (5644743034, 5644743035), 
+        (5644743035, 3306166843), (3306166843, 1791040119), (3306166844, 1791040119), 
+        (3306166844, 3306166843)
     ]
     
+    # Create a dictionary of weights using sorted tuples as keys to ensure consistency
+    edge_weights = {}
     for edge in all_connections:
-        is_heavy = edge in heavy_traffic_edges
-        custom_weights[edge] = get_time_based_weight(is_heavy)
+        edge_key = tuple(sorted(edge))  # Use sorted tuple as key
+        is_heavy = edge in heavy_traffic_edges or tuple(reversed(edge)) in heavy_traffic_edges
+        edge_weights[edge_key] = get_time_based_weight(is_heavy)
 
+    # Assign weights to all edges, ensuring bidirectional consistency
     for u, v, data in G.edges(data=True):
-        if (u, v) in custom_weights:
-            data['weight'] = custom_weights[(u, v)]
+        # Use sorted tuple so (u, v) and (v, u) are treated the same
+        edge_key = tuple(sorted([u, v]))
+
+        if edge_key in edge_weights:
+            weight = edge_weights[edge_key]
+        else:
+            # Check if we already assigned a weight to this edge pair
+            if edge_key not in edge_weights:
+                edge_weights[edge_key] = random.randint(10, 50)
+            weight = edge_weights[edge_key]
+
+        data["weight"] = weight
 
     beginning = new_node_id
     ending = safeNodesIds
@@ -244,9 +193,36 @@ def shortest_path(coords):
     shortest_target = min(ending, key=lambda t: distances[t])  
     shortest_path = paths[shortest_target]
 
+    # Plot shortest path
     fig, ax = ox.plot_graph(G, show=False, close=False, node_color="red", node_size=50, edge_linewidth=1, bgcolor="white")
+    
+    route_edges = list(zip(shortest_path[:-1], shortest_path[1:]))
 
-    # plt.show()
+    # Draw edge weights as labels - only once per edge pair
+    drawn_edges = set()
+    for u, v, data in G.edges(data=True):
+        if 'weight' in data:
+            # Use sorted tuple to avoid drawing the same edge twice
+            edge_key = tuple(sorted([u, v]))
+            if edge_key not in drawn_edges:
+                drawn_edges.add(edge_key)
+                
+                # Get midpoint for text placement
+                x1, y1 = G.nodes[u]["x"], G.nodes[u]["y"]
+                x2, y2 = G.nodes[v]["x"], G.nodes[v]["y"]
+                mid_x, mid_y = (x1 + x2) / 2, (y1 + y2) / 2
+                
+                # Plot the weight
+                ax.text(mid_x, mid_y, f'{data["weight"]:.0f}', fontsize=8, color='black', alpha=0.9, ha='center', va='center')
+
+    ox.plot_graph_route(G, shortest_path, ax=ax, route_linewidth=4, route_color="yellow", alpha=1)
+
+    # Save figure
+    algorithms_folder = "algorithms"
+    if not os.path.exists(algorithms_folder):
+        os.makedirs(algorithms_folder)
+
+    ## fig.savefig(os.path.join(algorithms_folder, "shortest_path_plot.png"), dpi=300)
     
     for node in G.nodes():
         x, y = G.nodes[node]["x"], G.nodes[node]["y"]
@@ -263,7 +239,8 @@ def shortest_path(coords):
         for node in shortest_path
         ],
         "target": targetNode
-    }
+    }   
+
+    print(json_path)
 
     return json_path
-
