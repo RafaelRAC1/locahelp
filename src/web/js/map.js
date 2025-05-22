@@ -4,8 +4,6 @@ function drawPath(pathData) {
         return;
     }
 
-    console.log(pathData)
-
     targetNode = pathData.target
     path = pathData.path
 

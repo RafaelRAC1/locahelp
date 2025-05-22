@@ -1,4 +1,4 @@
-fakeCoordinates = [[-23.51470, -46.18542, 'Sul da UBC'], [-23.51467, -46.18898, 'Oeste da UBC'], [-23.51382, -46.18453, 'Leste da UBC']]
+fakeCoordinates = [[-23.51470, -46.18542, 'Sul da UBC'], [-23.51535, -46.18326, 'Oeste da UMC'], [-23.519161, -46.187288, 'INSS'], [-23.516140, -46.180955, "Shopping Mogi"]]
 active = fakeCoordinates[0]
 order = 0
 
@@ -13,6 +13,10 @@ function alternateCoords() {
             order = order + 1
             break
         case 2:
+            active = fakeCoordinates[3]
+            order = order + 1
+            break
+        case 3:
             active = fakeCoordinates[0]
             order = 0
             break

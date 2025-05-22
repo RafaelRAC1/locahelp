@@ -64,9 +64,37 @@ def shortest_path(coords):
     # Add safe point
     safeNodes = [
         {
-            "lat":-23.51439,
-            "lon":-46.18395,
-            "local":"Ponto de Onibus",
+            "lat":-23.514377, 
+            "lon":-46.183998,
+            "local":"Terminal Rodoviario",
+            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+            "nodeId":""
+        },
+        {
+            "lat":-23.516449,
+            "lon":-46.185012,
+            "local":"Terminal Estudantes",
+            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+            "nodeId":""
+        },
+        {
+            "lat":-23.518150, 
+            "lon":-46.187190,
+            "local":"Polícia Cívil",
+            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+            "nodeId":""
+        },
+        {
+            "lat":-23.519292, 
+            "lon":-46.185442,
+            "local":"Prédio Prefeitura",
+            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+            "nodeId":""
+        },
+        {
+            "lat":  -23.515693, 
+            "lon":-46.187338,
+            "local":"Tiro de Guerra",
             "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
             "nodeId":""
         }
