@@ -73,7 +73,7 @@ function drawPath(pathData) {
     locationFeature.setStyle(new ol.style.Style({
         image: new ol.style.Icon({
             scale: 0.2, // Adjust the size of the icon
-            src: '../data/profile.png' // Replace with your actual image URL
+            src: '../resources/profile.png' // Replace with your actual image URL
         })
     }));
 
