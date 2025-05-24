@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
-from main import shortest_path
+from algorithms.dijsktra import shortest_path
 
 app = FastAPI()
 

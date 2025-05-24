@@ -4,8 +4,6 @@ import networkx as nx
 import datetime  
 import random  
 import os
-os.makedirs("algorithms", exist_ok=True)
-
 
 def add_node(lat, lon, G): 
     nodes = list(G.nodes(data=True))
