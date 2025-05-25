@@ -5,166 +5,136 @@ import datetime
 import random  
 import os
 
+# DELIMITA OS VÉRTICES DE DESTINO DO GRAFO 
+# LOCAIS CONSIDERADOS SEGUROS
+safeNodes = [
+    {
+        "lat":-23.514377, 
+        "lon":-46.183998,
+        "local":"Terminal Rodoviario",
+        "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+        "nodeId":""
+    },
+    {
+        "lat":-23.516449,
+        "lon":-46.185012,
+        "local":"Terminal Estudantes",
+        "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+        "nodeId":""
+    },
+    {
+        "lat":-23.518150, 
+        "lon":-46.187190,
+        "local":"Polícia Cívil",
+        "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+        "nodeId":""
+    },
+    {
+        "lat":-23.519292, 
+        "lon":-46.185442,
+        "local":"Prédio Prefeitura",
+        "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+        "nodeId":""
+    },
+    {
+        "lat":  -23.515693, 
+        "lon":-46.187338,
+        "local":"Tiro de Guerra",
+        "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
+        "nodeId":""
+    }
+]
+
+# FUNÇÃO PARA ADICIONAR NOVO VÉRTICE AO GRAFO
 def add_node(lat, lon, G): 
-    nodes = list(G.nodes(data=True))
     nearest_node = None
-    min_dist = float('inf')
-    # Find the nearest existing node to connect
+
+    # ENCONTRA O VÉRTICE MAIS PRÓXIMO A PARTIR DA LATITUDE E LONGITUDE INFORMADA
     nearest_node = ox.distance.nearest_nodes(G, lon, lat)
 
-    # Generate a unique node ID (or use a custom one)
-    new_node_id = max(G.nodes) + 1  # Ensure it's unique
+    # GERA UM ID ÚNICO PARA O VÉRTICE
+    new_node_id = max(G.nodes) + 1
 
-    # Add the new node with its attributes
+    # ADICIONA O VÉRTIDO AO GRAFO
     G.add_node(new_node_id, x=lon, y=lat)
 
-    print(nearest_node)
-
-    # Add an edge between the new node and the nearest node
+    # OBTÉM A DISTÂNCIA-ARESTA ENTRE O VÉRTICE E O VÉRTICE MAIS PRÓXIMO
     distance = ox.distance.great_circle(
         lat, lon,
         G.nodes[nearest_node]['y'], G.nodes[nearest_node]['x']
     )
 
-    # Add edge in both directions with the same weight
+    # ADICIONA A ARESTA ENTRE O VÉRTICE E O VÉRTICE MAIS PRÓXIMO
     G.add_edge(new_node_id, nearest_node, length=distance, weight=distance)
     G.add_edge(nearest_node, new_node_id, length=distance, weight=distance)
     
+    # RETORNA O GRAFO (G) E O ID DO VÉRTICE ADICIONADO
     return G, new_node_id
 
+# FUNÇÃO PARA DETERMINAR PESOS COM BASE NO HORÁRIO
+def get_time_based_weight(is_heavy_traffic=False):
+    current_hour = datetime.datetime.now().hour
+    
+    # PARA DIA: 5:00 ATE 17:00 (5-17)
+    if 5 <= current_hour < 17:
+        if is_heavy_traffic: # CASO SEJA DE TRAFEGO PESADO, PESO MAIOR
+            return random.randint(20, 30)  
+        else:
+            return random.randint(10, 25) 
+    # PARA NOITE: 17:00 ATE 5:00 (17-5)
+    else:
+        if is_heavy_traffic:
+            return random.randint(25, 55) # CASO DE TRAFEGO PESADO, PESO MAIOR
+        else:
+            return random.randint(19, 35)  
+
+# FUNÇÃO PARA CALCULAR CAMINHO MENOS CUSTOSO
 def shortest_path(coords):
+    # VETOR PARA ARMAZENAR OS IDs DOS VÉRTICES SEGUROS
+    safeNodesIds = []
+
+    # OBTÉM LATITUDE E LONGITUDE PELAS COORDENADAS ENVIADAS
     lat, lon = coords
 
-    # Original coordinates (commented out)
-    """
-    north = -23.54449680628284
-    south = -23.546631931890012
-    east = -46.2385738438777
-    west = -46.24104702097161
-    """
-
-    # New coordinates
+    # DELIMITA A ÁREA DO MAPA QUE OS VÉRTICES SERÃO EXTRAÍDOS
+    # EXTREMOS NORTE, SUL, LESTE E OESTE DO MAPA OPENSTREETMAP
     north = -23.511798
     south = -23.519742
     east = -46.180820
     west = -46.189472
 
+    # UNE EM UMA ARRAY OS PONTOS PARA EXTRAÇÃO DOS VÉRTICES
     bbox = [west, south, east, north]
 
-    # Get the graph without projecting
+    # OBTÉM O GRAFO EM UMA REDE DO TIPO ANDAR.
     G = ox.graph_from_bbox(bbox, network_type='walk')
     
-    # Add starting point node
+    # CRIA O VÉRTICE COM A LOCALIZAÇÃO PASSADA NA FUNÇÃO
     G, new_node_id = add_node(lat, lon, G)
 
-    # List of safe points coordinates
-
-    # Add safe point
-    safeNodes = [
-        {
-            "lat":-23.514377, 
-            "lon":-46.183998,
-            "local":"Terminal Rodoviario",
-            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
-            "nodeId":""
-        },
-        {
-            "lat":-23.516449,
-            "lon":-46.185012,
-            "local":"Terminal Estudantes",
-            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
-            "nodeId":""
-        },
-        {
-            "lat":-23.518150, 
-            "lon":-46.187190,
-            "local":"Polícia Cívil",
-            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
-            "nodeId":""
-        },
-        {
-            "lat":-23.519292, 
-            "lon":-46.185442,
-            "local":"Prédio Prefeitura",
-            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
-            "nodeId":""
-        },
-        {
-            "lat":  -23.515693, 
-            "lon":-46.187338,
-            "local":"Tiro de Guerra",
-            "foto":"https://i.ibb.co/DPW33gsd/pinpoint-removebg-preview.png",
-            "nodeId":""
-        }
-    ]
-
-    safeNodesIds = []
-
+    # ITERA O VERTOR COM OS VÉRTICES SEGUROS, E OS ADICIONA NO GRAFO
     for location in safeNodes:
         G, nodeId = add_node(location["lat"], location["lon"], G)
         location['nodeId'] = nodeId
         safeNodesIds.append(nodeId)
     
-    # Function to determine if it's morning or evening and set weights accordingly
-    def get_time_based_weight(is_heavy_traffic=False):
-        current_hour = datetime.datetime.now().hour
-        
-        # Morning: 5 AM to 5 PM (5-17)
-        if 5 <= current_hour < 17:
-            if is_heavy_traffic:
-                return random.randint(20, 30)  # Heavy traffic areas in morning
-            else:
-                return random.randint(10, 25)  # Normal traffic in morning
-        # Evening: 5 PM to 5 AM (17-5)
-        else:
-            if is_heavy_traffic:
-                return random.randint(25, 55)  # Heavy traffic areas in evening
-            else:
-                return random.randint(19, 35)  # Normal traffic in evening
-    
-    # Define heavy traffic edges (at least 2 from each section)
+    # DETERMINA ARESTAS COM TRÁFEGO PESADO (MOVIMENTADAS)
     heavy_traffic_edges = [
-        # Previous connections
         (356305920, 356305925), (356315514, 356315512),
-        
-        # Connections from Img 1
         (356306090, 356306091), (356306091, 6264967367),
-        
-        # Connections from Img 2
         (6264967367, 356306111), (356306111, 2435125370),
-        
-        # Connections from Img 3 and 4
         (356306102, 5661432523), (5661432523, 356306103),
-        
-        # Previous connections from latest images
         (356306108, 5755074585), (5661432417, 356351102),
-        
-        # New connections from upper part of the map
         (5755074565, 5755074574), (5755074562, 5755074571),
-        
-        # Circle connections
         (5755074578, 1819607178), (5755074575, 356306155),
-        
-        # Left side connections
         (3306164150, 3306164142), (3306164142, 7930322009),
-        
-        # Far left connections
         (3306164116, 3306164113), (3306164113, 3306164115),
-        
-        # Circle connections on the left
         (3306164118, 3306164115), (3306164115, 3306164127),
-        
-        # Right bottom connections
         (356351102, 356351098), (356351102, 356351212),
-        
-        # Upper right connections
         (356351208, 356351296), (356351296, 356351120)
     ]
-
-    # Generate time-based weights for all connections
-    custom_weights = {}
     
-    # All connections from the original dictionary
+    # DELIMITA AS ARESTAS RELEVANTES DO GRAFO
     all_connections = [
         (4561764463, 4561764462), (4561764462, 7927338847), (7927338847, 3560305834), 
         (3560305834, 1791040184), (3560305834, 356306125), (356306125, 356306123), 
@@ -189,76 +159,79 @@ def shortest_path(coords):
         (3306166844, 3306166843)
     ]
     
-    # Create a dictionary of weights using sorted tuples as keys to ensure consistency
+    # VARIAVEL PARA ARMZENAR PESO DAS ARESTAS
     edge_weights = {}
-    for edge in all_connections:
-        edge_key = tuple(sorted(edge))  # Use sorted tuple as key
-        is_heavy = edge in heavy_traffic_edges or tuple(reversed(edge)) in heavy_traffic_edges
-        edge_weights[edge_key] = get_time_based_weight(is_heavy)
 
-    # Assign weights to all edges, ensuring bidirectional consistency
+    # ITERA AS ARESTAS DO VETOR all_connections
+    for edge in all_connections:
+        edge_key = tuple(sorted(edge))  # OBTEM O ID DA ARESTA
+        is_heavy = edge in heavy_traffic_edges or tuple(reversed(edge)) in heavy_traffic_edges # VERIFICA SE É DE ALTO TRÁFEGO
+        edge_weights[edge_key] = get_time_based_weight(is_heavy) # ADICIONA PESO A ARESTA
+
+    # ITERA AS ARESTAS PARA ASSOCIAR O PESO
     for u, v, data in G.edges(data=True):
-        # Use sorted tuple so (u, v) and (v, u) are treated the same
+        #  OBTEM O ID DA ARESTA
         edge_key = tuple(sorted([u, v]))
 
+        # VERIFICA SE ARESTA JÁ ESTÁ COM PESO DEFINIDO
         if edge_key in edge_weights:
-            weight = edge_weights[edge_key]
+            weight = edge_weights[edge_key] # ARMAZENA PESO DA ARESTA
         else:
-            # Check if we already assigned a weight to this edge pair
+            # VERIFICA SE A ARESTA JÁ RECEBEU VALOR (EVITAR DUPLICAR)
             if edge_key not in edge_weights:
                 edge_weights[edge_key] = random.randint(10, 50)
-            weight = edge_weights[edge_key]
+            weight = edge_weights[edge_key] # ARMAZENA PESO DA ARESTA
 
+        # ADICIONA O PESO COMO ATRIBUTO WEIGHT DA ARESTA
         data["weight"] = weight
 
+    # DELIMITA O VÉRTICE DE INÍCIO PARA O DIJKSTRA
     beginning = new_node_id
+
+    # DELIMITA O(S) VÉRTICE(S) DE TÉRMINO PARA O DIJKSTRA
     ending = safeNodesIds
 
+    # OBTEM DISTÂNCIAS E CAMINHOS PARA OS PONTOS DE DESTINO USANDO DIJKSTRA
     distances, paths = nx.single_source_dijkstra(G, source=beginning, weight='weight')
 
-    shortest_target = min(ending, key=lambda t: distances[t])  
+    # ENCONTRA O VÉRTICE DESTINO COM O CAMINHO MENOS CUSTOSO
+    shortest_target = min(ending, key=lambda t: distances[t])
+
+    # ARMZENA O CAMINHO MAIS CURTO EM UMA VARIÁVEL
     shortest_path = paths[shortest_target]
 
-    # Plot shortest path
+    # INICIALIZA A PLOTAGEM DO GRAFO (EXIBIR IMAGEM)
     fig, ax = ox.plot_graph(G, show=False, close=False, node_color="red", node_size=50, edge_linewidth=1, bgcolor="white")
-    
-    route_edges = list(zip(shortest_path[:-1], shortest_path[1:]))
 
-    # Draw edge weights as labels - only once per edge pair
+    # DESENHA PESO DAS ARESTAS 
     drawn_edges = set()
     for u, v, data in G.edges(data=True):
+        # VERIFICA SE AS ARESTAS POSSUEM PESO
         if 'weight' in data:
-            # Use sorted tuple to avoid drawing the same edge twice
+            # ARMAZENA ID DO VERTICE 
             edge_key = tuple(sorted([u, v]))
+            # VERIFICA SE JÁ FOI DESENHADO, PARA EVITAR DUPLICIDADE
             if edge_key not in drawn_edges:
                 drawn_edges.add(edge_key)
-                
-                # Get midpoint for text placement
+
+                # OBTEM O PONTO INTERMEDIÁRIO ENTRE OS VÉRTICES DA ARESTA PARA DESENHAR O PESO
                 x1, y1 = G.nodes[u]["x"], G.nodes[u]["y"]
                 x2, y2 = G.nodes[v]["x"], G.nodes[v]["y"]
                 mid_x, mid_y = (x1 + x2) / 2, (y1 + y2) / 2
                 
-                # Plot the weight
+                # DESENHA O PESO NO INTERMÉDIO DA ARESTA
                 ax.text(mid_x, mid_y, f'{data["weight"]:.0f}', fontsize=8, color='black', alpha=0.9, ha='center', va='center')
 
+    # DESENHA O CAMINHO MAIS CURTO NA PLOTAGEM DO GRAFO
     ox.plot_graph_route(G, shortest_path, ax=ax, route_linewidth=4, route_color="yellow", alpha=1)
-
-    # Save figure
-    algorithms_folder = "algorithms"
-    if not os.path.exists(algorithms_folder):
-        os.makedirs(algorithms_folder)
-
-    ## fig.savefig(os.path.join(algorithms_folder, "shortest_path_plot.png"), dpi=300)
     
-    for node in G.nodes():
-        x, y = G.nodes[node]["x"], G.nodes[node]["y"]
-        ax.text(x, y, str(node), fontsize=8, color="black")
-
+    # OBTÉM O VÉRTICE DE DESTINO
     targetNode = None
     for node in safeNodes:
         if node.get("nodeId") == shortest_target:
             targetNode = node
 
+    # CRIA DOCUMENTO JSON COM TODOS OS VÉRTICES DO CAMINHO MENOS CUSTOSO
     json_path = {
         "path": [
             {"node": node, "lat": G.nodes[node]["y"], "lon": G.nodes[node]["x"]}
@@ -267,6 +240,5 @@ def shortest_path(coords):
         "target": targetNode
     }   
 
-    print(json_path)
-
+    # RETORNA O DOCUMENTO
     return json_path

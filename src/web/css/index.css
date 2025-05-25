@@ -142,11 +142,11 @@ nav {
     font-size: 180px;
     right: 60px;
     bottom: 60px;
-    color: rgba(0,0,0,0.1)
+    color: rgba(0, 0, 0, 0.1)
 }
 
 .not-close {
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
     border: none;
     position: absolute;
     right: 30px;
@@ -156,17 +156,102 @@ nav {
     color: rgba(54, 54, 54, 0.685)
 }
 
+.locations-container {
+    position: absolute;
+    width: 100%;
+    top: 280px;
+    width: 100%;
+    z-index: 799;
+}
+
+.locations-content {
+    width: 80%;
+    margin: 0 auto;
+    background-color: rgb(119, 38, 38);
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    box-shadow: 0cap 0px 28px -6px rgba(175, 175, 175, 0.25);
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.locations-title-container {
+    width: 100%;
+    background-color: rgb(172, 26, 26);
+    color: white;
+    padding: 10px;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 15px;
+}
+
+.locations-title {
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.locations-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 30px;
+    padding-right: 30px;
+    row-gap: 20px;
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.location {
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.location>img {
+    width: 100%;
+}
+
+.location-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    font-size: 26px;
+    padding: 5px;
+    padding-left: 15px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.animate-locations {
+    animation: popIn .5s ease-in-out;
+}
+
+.hide {
+    display: none;
+}
+
 @keyframes popIn {
     0% {
         opacity: 0;
         margin-top: 100px;
     }
+
     50% {
         margin-top: 0px;
     }
+
     70% {
         transform: rotateX(-25deg);
     }
+
     100% {
         transform: rotateX(0deg);
         opacity: 1;
@@ -181,6 +266,7 @@ nav {
     0% {
         opacity: 1;
     }
+
     100% {
         opacity: 0;
     }
