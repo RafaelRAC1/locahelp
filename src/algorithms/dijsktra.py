@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import datetime  
 import random  
-import os
 
 # DELIMITA OS VÉRTICES DE DESTINO DO GRAFO 
 # LOCAIS CONSIDERADOS SEGUROS
