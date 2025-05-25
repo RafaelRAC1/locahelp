@@ -1,3 +1,4 @@
 cache/
 src/__pycache__/endpoint.cpython-312.pyc
 src/__pycache__/main.cpython-312.pyc
+src/algorithms/__pycache__/dijsktra.cpython-312.pyc
