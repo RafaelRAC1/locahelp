@@ -1,4 +1,6 @@
 osmnx; 
+uvicorn;
 matplotlib; 
-networkx; 
+networkx;
+scikit-learn;
 fastapi
