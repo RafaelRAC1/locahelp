@@ -85,10 +85,6 @@ uvicorn endpoint:app --host 0.0.0.0 --port 8000 --reload
 
 ## 📸 Demonstrações
 
-Inclua aqui prints, gifs ou vídeos mostrando a interface ou o funcionamento do sistema:
-
-Inclua aqui prints, gifs ou vídeos mostrando a interface ou o funcionamento do sistema:
-
 - Tela para selecionar a localizacao
   ![Tela inicial](./assets/readme/locais_pre_definidos.jpeg)
 
