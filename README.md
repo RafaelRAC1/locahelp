@@ -87,9 +87,17 @@ uvicorn endpoint:app --host 0.0.0.0 --port 8000 --reload
 
 Inclua aqui prints, gifs ou vídeos mostrando a interface ou o funcionamento do sistema:
 
-- Tela inicial
-- Exemplo de funcionalidade
-- Resultados esperados
+Inclua aqui prints, gifs ou vídeos mostrando a interface ou o funcionamento do sistema:
+
+- Tela para selecionar a localizacao
+  ![Tela inicial](./assets/readme/locais_pre_definidos.jpeg)
+
+- Nova localizacao,   
+  ![Funcionalidade](./assets/readme/nova_localizacao_setada.jpeg)
+
+- Rota mais segura calculada usando o algoritmo de Dijkstra  
+  ![Resultados esperados](./assets/readme/rota_mais_segura_calculada.jpeg)
+
 
 ---
 
